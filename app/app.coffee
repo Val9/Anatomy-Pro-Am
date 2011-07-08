@@ -46,12 +46,13 @@ exports.createServer = (app) ->
 			players = activityManager.current[activity_id].getPlayers()
 			for point in points
 				activityManager.current[activity_id].createPoint player_id, point
-				sessionManager.publishToActivity players, 'pointColored', player_id, points
+			sessionManager.publishToActivity players, 'pointColored', player_id, points[0], points[points.length-1]
 		@pointErased = (activity_id, player_id, points) ->
 			players = activityManager.current[activity_id].getPlayers()
 			for point in points
 				activityManager.current[activity_id].deletePoint player_id, point
-				sessionManager.publishToActivity players, 'pointErased', player_id, points
+			offset = 2
+			sessionManager.publishToActivity players, 'pointErased', player_id, points[0 + offset], points[points.length-1-offset]
 		@clearCanvas = (activity_id, player_id, layer) ->
 			activityManager.current[activity_id].clearCanvas player_id, layer
 			players = activityManager.current[activity_id].getPlayers()
@@ -105,7 +106,7 @@ exports.createServer = (app) ->
 							totalCaseScore['healthyHit'] /= layerCount
 							console.log 'this is the final case score'
 							console.log totalCaseScore
-							emit.apply emit, ['setScoreForCase', {payload: caseScore}]
+							emit.apply emit, ['setScoreForCase', {payload: totalCaseScore}]
 				)
 		@getChatHistoryForActivity = (activity_id, emit) ->
 			activityManager.current[activity_id].getChatHistoryForActivity (chats) ->

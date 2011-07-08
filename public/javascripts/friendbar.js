@@ -86,7 +86,7 @@ components.friendbar = function(){
 			event.preventDefault();
 			if (this.model.get('current_case_id') == me.get('current_case_id')){
 				this.model.toggleVisibility();
-				if(window.dThis.ctxArr&&window.dThis.ctxArr[this.model.get('id')])	window.dThis.ctxArr[this.model.get('id')].clearRect(0, 0, window.dThis.canvas.width, window.dThis.canvas.height);
+				//if(window.dThis.ctxArr&&window.dThis.ctxArr[this.model.get('id')])	window.dThis.ctxArr[this.model.get('id')].clearRect(0, 0, window.dThis.canvas.width, window.dThis.canvas.height);
 				online_friends.each(function(friend){
 					if(friend.get('layer_enabled')){
 						online_friends.get(friend.get('id')).set({'layer_enabled': true},{silent: true});
