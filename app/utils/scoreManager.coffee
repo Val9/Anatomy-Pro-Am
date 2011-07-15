@@ -6,6 +6,10 @@ fs = require 'fs'
 ###
 #	Score Manager
 ###
+
+# Looks through goalData directory and finds the number of cases
+# Then iterates through their folders and gets the goalLayerData inside
+# Returns in format array of object {caseNum: Number of case, layerImageData : Array of filenames in that case's folder}
 exports.getImageInfo = (callback) ->
 	loadLayersCallback = (caseList, caseIndex, totalImageData) ->
 		if(caseIndex < caseList.length)
@@ -36,7 +40,7 @@ exports.getImageInfo = (callback) ->
 		loadLayersCallback caseList, 0, []
 	)
 
-
+#Sets the goalPoints which is object {targetPoints, healthyPoints} into the redis server
 exports.setGoalPointsForCaseAndLayer = (case_ID, layer_ID, goalPoints) ->
 	@redisClient = redis.createClient config.redis.port, config.redis.server
 	@redisClient.select config.redis.db
@@ -87,8 +91,6 @@ floodToolNonselectedRegion = (myPointArray, width, height) ->
 				else if reachRight
 					reachRight = false
 			pixelPos += width
-	console.log "totalCount"
-	console.log totalCount
 	myPointArray
 
 exports.getScoreForCaseAndLayer = (self, player_id, width, height, case_ID, layer_ID, myPoints, goalPoints, callback) ->
@@ -106,33 +108,17 @@ exports.getScoreForCaseAndLayer = (self, player_id, width, height, case_ID, laye
 	#Flood tool time
 	myPointArray = floodToolNonselectedRegion myPointArray, width, height 
 	#Compare Against goalData (0's are selected regions, 1's are border regions, 2's are nonselected regions) 
-	
-	console.log "mypointArrl/goalpointstl"
-	console.log myPoints.length
 	console.log (myPointArray.length + "/" + goalPoints['targetPoints'].length)
-	
-	
-	
-	
-	
-	
-	
 	targetHit = 0
 	healthyHit = 0
 	_.each( _.range(targetPointsXY.length/2), (n) -> 
 		if myPointArray[ ( ( targetPointsXY[ 2*n + 1] * (width) ) + ( targetPointsXY[2*n] ) ) ] isnt 2 
 			targetHit += 1
-		else
-			#console.log "didn't hit" + ( targetPointsXY[ 2*n] ) + "/" + ( targetPointsXY[2*n+1] ) + " value was " + myPointArray[ ( ( targetPointsXY[ 2*n + 1] * (width) ) + ( targetPointsXY[2*n] ) ) ]
 	)	
 	_.each( _.range(healthyPointsXY.length/2), (n) -> 
 		if myPointArray[ ( ( healthyPointsXY[ 2*n + 1] * (width) ) + ( healthyPointsXY[2*n] ) ) ] isnt 2 
 			healthyHit += 1
-			#console.log "missed at " + ( healthyPointsXY[ 2*n] ) + "/" +( healthyPointsXY[2*n+1] )
 	)
-	console.log width
-	console.log height
-	
 	if targetPointsXY.length > 0
 		self.score.tumorHit += targetHit * 200 / targetPointsXY.length
 	if healthyPointsXY.length > 0

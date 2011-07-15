@@ -22,8 +22,6 @@ components.scoreLoaderView = function(){
 			remote.getImageInfo(this.processImages);
 		},
 		processImages: function(caseData) {
-			console.log("just confirming");
-			console.log(caseData);
 			var caseSelect = $('#caseSelector')[0];
 			this.caseData = caseData;
 			caseSelect.add( new Option("Select your case and layer to add", "default"));
@@ -38,19 +36,13 @@ components.scoreLoaderView = function(){
 			if(e.target.value != "default"){
 				remote.getImageInfo( function(caseData){
 					var caseSelector = e.target.value.split(",");
-					//var caseSelector = $('#caseSelector')[0].value;
 					var caseIndex = caseSelector[0];
 					var layer_ID = caseSelector[1];
-					console.log(caseData);
 					if(caseIndex < caseData.length){
 						var layerData = caseData[caseIndex].layerImageData;
 						var case_ID = caseData[caseIndex].caseNum;
 						if(layer_ID < layerData.length){
-							console.log("index");
-							console.log(case_ID);
-							console.log(layerData);
 							console.log("Load Data Run");
-				
 							var left = 0;
 							var top = 0;
 							var img = new Image();
@@ -82,8 +74,6 @@ components.scoreLoaderView = function(){
 								    }
 								}
 								remote.setGoalPointsForCaseAndLayer(case_ID, layer_ID, {"targetPoints": targetArr, "healthyPoints": healthyArr});
-								console.log(targetArr.length);
-								console.log(healthyArr.length);
 								console.log({"targetPoints": targetArr, "healthyPoints": healthyArr});
 								console.log("Case " + case_ID + " at layer " + layer_ID + " has been set!");
 							}

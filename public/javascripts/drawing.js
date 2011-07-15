@@ -103,7 +103,6 @@ components.drawing = function(){
 			this.doubleBufferContext.clearRect(0, 0, this.doubleBufferCanvas.width, this.doubleBufferCanvas.height);
 			this.doubleBufferCanvas.width = this.doubleBufferCanvas.width;
 
-
 			/* Retreive chat messages */
 			remote.getChatHistoryForActivity(me.get('current_case_id'), emit);
 						
@@ -179,11 +178,6 @@ components.drawing = function(){
 						this.localEraseEvent(firstPoint, lastPoint, this.otherPlayersContextArray[player_id]);	
 				}	
 			}.bind(this));
-			
-			//Needs removal
-			if(false){ 
-						self.setGoalPointsForCase('images/cases/case1/perfect3F.png', 3);
-					}
 
 			em.on('setScoreForCase', function(data) {
 				var targetHit = data.payload.tumorHit;
@@ -250,24 +244,12 @@ components.drawing = function(){
 			// fixtures for the images (scans):
 			// Needs refactoring
 			console.log (this.caseNum);
-			
-		/*	this.imageArray = new Array();
-			this.layerImage = new Image();
-			if(this.caseNum == 1){
-				this.imageArray = ['/images/cases/case3/1.png', '/images/cases/case3/2.png'];
-			}else{
-				this.imageArray = ['/images/cases/case1/1.png', '/images/cases/case1/2.png','/images/cases/case1/3.png', '/images/cases/case1/4.png'];
-			}
-			
-			for(imageSrc in this.imageArray) this.layerImage.src = imageSrc;
-			*/
 			if(this.caseNum == 1){
 				var imageRefs = ['/images/cases/case3/1.png', '/images/cases/case3/2.png'];
 			}else{
 				var imageRefs = ['/images/cases/case1/1.png', '/images/cases/case1/2.png','/images/cases/case1/3.png', '/images/cases/case1/4.png'];
 			}
 			this.$('#slider_input').attr('style', 'width:' + ((imageRefs.length - 1) * 28));
-			
 			
 			this.layerCount = imageRefs.length;
 			var slider;
@@ -304,7 +286,6 @@ components.drawing = function(){
 			em.removeAllListeners('playerNotDone');
 			em.removeAllListeners('everyoneIsDone');
 			em.removeAllListeners('scoreEveryone');
-			em.removeAllListeners('setGoalPointsForCase');
 			em.removeAllListeners('setScoreForCase');
 		},
 		openLeaderboardButton: function(e){
@@ -381,14 +362,7 @@ components.drawing = function(){
 		zoomIn: function(event){
 			event.preventDefault();
 			if(this.zoom == 1){
-				this.zoom = 2;
-				/*this.myPlayerContext.clearRect(0, 0, this.myPlayerCanvas.width, this.myPlayerCanvas.height);
-				for(arrKey in this.otherPlayersContextArray){
-					this.otherPlayersContextArray[arrKey].clearRect(0, 0, this.myPlayerCanvas.width, this.myPlayerCanvas.height);
-				}		
-				for(arrKey in this.otherPlayersCanvasArray){
-					this.otherPlayersCanvasArray[arrKey].width = this.otherPlayersCanvasArray[arrKey].width;
-				}*/							
+				this.zoom = 2;						
 				this.zoomXOffset = event.clientX-this.doubleBufferCanvas.offsetLeft;
 				this.zoomYOffset = event.clientY-this.doubleBufferCanvas.offsetTop;
 				this.$('#scan_container').css('overflow', "scroll");		
@@ -407,13 +381,6 @@ components.drawing = function(){
 		zoomOut: function(event){
 			event.preventDefault();
 			if(this.zoom == 2){
-				/*this.myPlayerContext.clearRect(0, 0, this.myPlayerCanvas.width, this.myPlayerCanvas.height);
-				for(arrKey in this.otherPlayersContextArray){
-					this.otherPlayersContextArray[arrKey].clearRect(0, 0, this.myPlayerCanvas.width, this.myPlayerCanvas.height);
-				}
-				for(arrKey in this.otherPlayersCanvasArray){
-					this.otherPlayersCanvasArray[arrKey].width = this.otherPlayersCanvasArray[arrKey].width;
-				}*/
 				this.zoom = 1;
 				for(arrKey in layers){
 					layers[arrKey].height /= 2;
@@ -496,7 +463,7 @@ components.drawing = function(){
 					var curX = Math.floor(this.oldX+(delX/stepCount)*(c+1));
 					var curY = Math.floor(this.oldY+(delY/stepCount)*(c+1));
 					if(isVertical){
-						for (var ySubset = curY; ySubset < curY+penWidth; ySubset++)
+						for (var ySubset = curY-penWidth+1; ySubset < curY+penWidth; ySubset++)
 							if(ySubset>0 && ySubset<this.myPlayerCanvas.height){
 								points[arrayPos] = {x: xProcess(curX),
 									y:  yProcess(ySubset),
@@ -504,7 +471,7 @@ components.drawing = function(){
 								arrayPos++;
 							}
 					}else{
-						for (var xSubset = curX; xSubset < curX+penWidth; xSubset++)
+						for (var xSubset = curX-penWidth+1; xSubset < curX+penWidth; xSubset++)
 							if(xSubset>0 && xSubset<this.myPlayerCanvas.width){
 								points[arrayPos] = {x: xProcess(xSubset),
 									y: yProcess(curY),
@@ -733,7 +700,6 @@ components.drawing = function(){
 			
 			var d2 = new Date();
 			
-			
 			this.doubleBufferContext.globalCompositeOperation = "destination-out";
 			this.doubleBufferContext.fillRect(0, 0, this.doubleBufferCanvas.width, this.doubleBufferCanvas.height);
 			this.doubleBufferContext.globalCompositeOperation = "copy";
@@ -744,7 +710,6 @@ components.drawing = function(){
 			
 			if(this.zoom == 1) this.doubleBufferContext.drawImage(this.singleBufferCanvas, 0, 0, this.singleBufferCanvas.width, this.singleBufferCanvas.height);
 			if(this.zoom == 2) this.doubleBufferContext.drawImage(this.singleBufferCanvas, 0, 0, this.doubleBufferCanvas.width, this.doubleBufferCanvas.height);
-			
 			//this.doubleBufferContext.restore();
 			
 			var d3 = new Date();

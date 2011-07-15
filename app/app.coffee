@@ -132,7 +132,6 @@ exports.createServer = (app) ->
 			scoreManager.getImageInfo(callback)
 		@setGoalPointsForCaseAndLayer = (case_ID, layer_ID, goalPoints) ->
 			scoreManager.setGoalPointsForCaseAndLayer case_ID, layer_ID, goalPoints
-		
 
 		# dnode/coffeescript fix:
 		@version = config.version
