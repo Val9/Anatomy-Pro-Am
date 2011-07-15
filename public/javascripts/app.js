@@ -61,9 +61,13 @@ $(function(){
 			em.on('AdminPanel', function(){
 				new AdminView;
 			});
+			em.on('ScoreLoader', function(){
+				new ScoreLoaderView;
+			});
 		});
 		window.app = new AppView;
 		
+		components.scoreLoaderView();
 		components.adminView();
 		components.cases();
 		components.friendbar();

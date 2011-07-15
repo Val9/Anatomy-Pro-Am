@@ -885,7 +885,7 @@ s
 	top:0;
 	left:-3;
 	z-index: 12;
-	cursor: url(../images/brush_cursor.png);
+	cursor: url(../images/brush_cursor.png) 3 27;
 }
 
                                                                                 /*tabs and slider container--*/

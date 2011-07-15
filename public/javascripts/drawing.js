@@ -269,9 +269,9 @@ components.drawing = function(){
 			this.$('#slider_input').attr('style', 'width:' + ((imageRefs.length - 1) * 28));
 			
 			
-			
+			this.layerCount = imageRefs.length;
 			var slider;
-			slider = YAHOO.widget.Slider.getHorizSlider("slider-bg", "slider-thumb", 0, (imageRefs.length - 1) * 40, 40);
+			slider = YAHOO.widget.Slider.getHorizSlider("slider-bg", "slider-thumb", 0, (this.layerCount - 1) * 40, 40);
 			slider.subscribe('change', function(){
 				this.changeLayer(slider.getValue() / 40);
 			}.bind(this));
@@ -496,7 +496,7 @@ components.drawing = function(){
 					var curX = Math.floor(this.oldX+(delX/stepCount)*(c+1));
 					var curY = Math.floor(this.oldY+(delY/stepCount)*(c+1));
 					if(isVertical){
-						for (var ySubset = curY-penWidth; ySubset < curY+penWidth-1; ySubset++)
+						for (var ySubset = curY; ySubset < curY+penWidth; ySubset++)
 							if(ySubset>0 && ySubset<this.myPlayerCanvas.height){
 								points[arrayPos] = {x: xProcess(curX),
 									y:  yProcess(ySubset),
@@ -504,7 +504,7 @@ components.drawing = function(){
 								arrayPos++;
 							}
 					}else{
-						for (var xSubset = curX-penWidth; xSubset < curX+penWidth-1; xSubset++)
+						for (var xSubset = curX; xSubset < curX+penWidth; xSubset++)
 							if(xSubset>0 && xSubset<this.myPlayerCanvas.width){
 								points[arrayPos] = {x: xProcess(xSubset),
 									y: yProcess(curY),
@@ -537,16 +537,15 @@ components.drawing = function(){
 		drawTool: function(event) {
 			event.preventDefault();
 			this.isErasing = false;
-			$('#doubleBufferedCanvas')[0].style.cursor='url(images/brush_cursor.png);';
+			$('#doubleBufferedCanvas')[0].style.cursor='url(images/brush_cursor.png) 3 27';
 			this.clearButtonStyles();
 			this.$('#drawingTool').addClass('red_button_active');
 			this.$('#erasingTool').addClass('red_button');
-
 		},
 		eraseTool: function(event) {
 			event.preventDefault();
 			this.isErasing = true;
-			$('#doubleBufferedCanvas')[0].style.cursor='url(images/eraser_cursor-2.cur)';
+			$('#doubleBufferedCanvas')[0].style.cursor='url(images/eraser_cursor.png) 3 27';
 			this.clearButtonStyles();
 			this.$('#erasingTool').addClass('red_button_active');
 			this.$('#drawingTool').addClass('red_button');
@@ -708,7 +707,7 @@ components.drawing = function(){
 		},
 		done: function() {
 			/* Retreive score */
-			remote.getScoreForCase(me.get('current_case_id'), me, this.myPlayerCanvas.width/2, this.myPlayerCanvas.height/2, emit);
+			remote.getScoreForCase(me.get('current_case_id'), me, this.myPlayerCanvas.width, this.myPlayerCanvas.height, this.layerCount, emit);
 			//Show small done display
 			this.clean();
 			var self = this;

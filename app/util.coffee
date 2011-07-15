@@ -173,12 +173,10 @@ class ContouringActivity
 	    @activityData.newChat player_id, message    
 	getChatHistoryForActivity: (callback) ->
 	    return @activityData.getChatHistoryForActivity callback
-	setGoalPointsForCaseAndLayer: (layer_ID, goalPoints) ->
-	    @activityData.setGoalPointsForCaseAndLayer @caseID, layer_ID, goalPoints
+	setGoalPointsForCaseAndLayer: (case_ID, layer_ID, goalPoints) ->
+	    @activityData.setGoalPointsForCaseAndLayer case_ID, layer_ID, goalPoints
 	getScoreForCaseAndLayer: (player_id, width, height, layer_ID, callback) ->
 		return @activityData.getScoreForCaseAndLayer player_id, width, height, @caseID, layer_ID, callback	
-	getLayerCountForCase: (callback) ->
-		return @activityData.getLayerCountForCase @caseID, callback	
 	playerDone: (player, tumorHit, healthyHit, callback) ->
 		@players[player.id].isDone = true
 		@players[player.id].tumorHit = tumorHit
@@ -249,10 +247,6 @@ class ContouringActivityData
             _.each chats, (chat) ->
                 data.push JSON.parse chat
             callback data
-	getLayerCountForCase: (case_ID, callback) ->
-		@redisClient.get 'Case:'+case_ID+':layerCount', (err, layerCount) ->
-			if err then console.log 'GET error: ', err
-			callback layerCount
 	setGoalPointsForCaseAndLayer: (case_ID, layer_ID, goalPoints) ->
 		scoreManager.setGoalPointsForCaseAndLayer @, case_ID, layer_ID, goalPoints
 	getScoreForCaseAndLayer: (player_id, width, height, case_ID, layer_ID, callback) ->

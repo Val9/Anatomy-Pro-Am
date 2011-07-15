@@ -13,6 +13,7 @@ util = require './util'
 store = new util.MemoryStore
 sessionManager = new util.SessionManager
 activityManager = new util.ActivityManager
+scoreManager = require './utils/scoreManager'
 flush = util.flushDatabase
 
 ## DNode RPC API
@@ -23,6 +24,8 @@ exports.createServer = (app) ->
 				emit.apply emit, ['Continue']
 			if pw is 'AdminPanel33!'
 				emit.apply emit, ['AdminPanel']
+			if pw is '40001'
+				emit.apply emit, ['ScoreLoader']
 		@subscribe = (auth_token, emit) ->
 			session = sessionManager.sessionConnected auth_token, conn, client, emit
 			emit.apply emit, ['myINFO', session.fbUser, session.player_color]
@@ -87,27 +90,24 @@ exports.createServer = (app) ->
 			activityManager.current[activity_id].addChatMessage player_id, message
 			players = activityManager.current[activity_id].getPlayers()
 			sessionManager.publishToActivity players, 'newChat', player_id, layer, message
-		@setGoalPointsForCaseAndLayer = (activity_id, layer_ID, goalPoints) ->
-			activityManager.current[activity_id].setGoalPointsForCaseAndLayer layer_ID, goalPoints
-		@getScoreForCase = (activity_id, player, width, height, emit) ->
-			activityManager.current[activity_id].getLayerCountForCase (layerCount) ->
-				totalCaseScore = {'tumorHit': 0, 'healthyHit': 0}
-				_.each( _.range(layerCount), (layer_ID) ->
-					activityManager.current[activity_id].getScoreForCaseAndLayer player.id, width, height, layer_ID, (caseScore) ->
-						totalCaseScore['tumorHit'] += caseScore['tumorHit']
-						totalCaseScore['healthyHit'] += caseScore['healthyHit']
-						players = activityManager.current[activity_id].getPlayers()
-						sessionManager.publishToActivity players, 'playerIsDone', player
-						activityManager.current[activity_id].playerDone player, caseScore.tumorHit, caseScore.healthyHit, (result) ->
-							if result == true
-								sessionManager.publishToActivity players, 'everyoneIsDone', player
-						if layer_ID is layerCount - 1
-							totalCaseScore['tumorHit'] /= layerCount
-							totalCaseScore['healthyHit'] /= layerCount
-							console.log 'this is the final case score'
-							console.log totalCaseScore
-							emit.apply emit, ['setScoreForCase', {payload: totalCaseScore}]
-				)
+		@getScoreForCase = (activity_id, player, width, height, layerCount, emit) ->
+			totalCaseScore = {'tumorHit': 0, 'healthyHit': 0}
+			_.each( _.range(layerCount), (layer_ID) ->
+				activityManager.current[activity_id].getScoreForCaseAndLayer player.id, width, height, layer_ID, (caseScore) ->
+					totalCaseScore['tumorHit'] += caseScore['tumorHit']
+					totalCaseScore['healthyHit'] += caseScore['healthyHit']
+					players = activityManager.current[activity_id].getPlayers()
+					sessionManager.publishToActivity players, 'playerIsDone', player
+					activityManager.current[activity_id].playerDone player, caseScore.tumorHit, caseScore.healthyHit, (result) ->
+						if result == true
+							sessionManager.publishToActivity players, 'everyoneIsDone', player
+					if layer_ID is layerCount - 1
+						totalCaseScore['tumorHit'] /= layerCount
+						totalCaseScore['healthyHit'] /= layerCount
+						console.log 'this is the final case score'
+						console.log totalCaseScore
+						emit.apply emit, ['setScoreForCase', {payload: totalCaseScore}]
+			)
 		@getChatHistoryForActivity = (activity_id, emit) ->
 			activityManager.current[activity_id].getChatHistoryForActivity (chats) ->
 				emit.apply emit, ['setChatHistory', {payload: chats}]
@@ -128,6 +128,11 @@ exports.createServer = (app) ->
 			sessionManager.setActivity player, 0
 			players = activityManager.current[activity_id].getPlayers()
 			sessionManager.publishToActivity players, 'playerLeft', player
+		@getImageInfo = (callback) ->
+			scoreManager.getImageInfo(callback)
+		@setGoalPointsForCaseAndLayer = (case_ID, layer_ID, goalPoints) ->
+			scoreManager.setGoalPointsForCaseAndLayer case_ID, layer_ID, goalPoints
+		
 
 		# dnode/coffeescript fix:
 		@version = config.version

@@ -84,6 +84,13 @@ server.all '/tab', (req, res) ->
 server.post '/deauth', (req, res) ->
 	fbhelper.userDeauthed(req)
 	res.end()
+	  
+#Load the goal points into redis for comparison
+server.all '/goalPointLoader', (req, res) ->
+
+
+server.post '/goalPointLoaded', (req, res) ->
+	console.log req.body
 
 #used to get all players given the activity_id they currently have.  
 server.all '/friends/:activity_id?', (req, res) ->
