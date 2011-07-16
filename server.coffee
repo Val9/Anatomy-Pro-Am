@@ -4,6 +4,8 @@ app = require './app/app'
 express = require 'express@2.2.2'
 browserify = require 'browserify@0.3.1'
 fbgraph = require 'facebook-graph@0.0.6'
+
+
 https = require 'https'
 http = require 'http'
 httpClient = require './public/javascripts/httpclient.js'
@@ -29,7 +31,7 @@ server.use express.static __dirname + '/public'
 server.use browserify {
 	mount: '/browserify.js',
 	base: __dirname,
-	require: ['backbone@0.3.3', 'underscore@1.1.5'],
+	require: ['backbone@0.3.3', 'underscore@1.1.5', 'jquery-browserify'],
 	#filter: require('jsmin').jsmin
 }
 

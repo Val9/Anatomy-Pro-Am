@@ -64,6 +64,9 @@ $(function(){
 			em.on('ScoreLoader', function(){
 				new ScoreLoaderView;
 			});
+			em.on('Isometric', function(){
+				new IsometricView;
+			});
 		});
 		window.app = new AppView;
 		
@@ -71,6 +74,7 @@ $(function(){
 		components.adminView();
 		components.cases();
 		components.friendbar();
-		components.drawing();	
+		components.drawing();
+		components.isometricView();
 	}
 });

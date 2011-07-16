@@ -1,18 +1,8 @@
 <body>
 Hey there!</br>
-
-
-
 </body>
-
-
 <script>
-
-
-
-
 var canArr = new Array();
-
 for(var c = 0; c < 125; c++){
 	canArr[c] = document.createElement('canvas');
 	canArr[c].height = '200';
@@ -22,16 +12,4 @@ for(var c = 0; c < 125; c++){
 	ctx.fillStyle = "rgb(" + (c%5)*64 + "," + ((Math.floor(c/5))%5)*64 + "," + ((Math.floor(c/25))%5)*64 + ")";  
 	ctx.fillRect(0, 0, 200, 200);
 }
-
-
-
-
-
-
-
-
-
 </script>
-
-
-

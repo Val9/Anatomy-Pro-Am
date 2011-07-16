@@ -24,8 +24,10 @@ exports.createServer = (app) ->
 				emit.apply emit, ['Continue']
 			if pw is 'AdminPanel33!'
 				emit.apply emit, ['AdminPanel']
-			if pw is '40001'
+			if pw is 'score'
 				emit.apply emit, ['ScoreLoader']
+			if pw is 'iso'
+				emit.apply emit, ['Isometric']
 		@subscribe = (auth_token, emit) ->
 			session = sessionManager.sessionConnected auth_token, conn, client, emit
 			emit.apply emit, ['myINFO', session.fbUser, session.player_color]

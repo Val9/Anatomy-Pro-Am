@@ -6,9 +6,7 @@ components.adminView = function(){
 		el: $('#game'),
 		events:{
 			"click #refresh":'fetch',
-			
 			'click #newCase':'newCase',
-			
 			'click #move' : 'move'
 		},
 		initialize: function() {
