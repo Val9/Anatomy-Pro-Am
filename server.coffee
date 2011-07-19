@@ -31,7 +31,7 @@ server.use express.static __dirname + '/public'
 server.use browserify {
 	mount: '/browserify.js',
 	base: __dirname,
-	require: ['backbone@0.3.3', 'underscore@1.1.5', 'jquery-browserify'],
+	require: ['backbone@0.3.3', 'underscore@1.1.5'],
 	#filter: require('jsmin').jsmin
 }
 
