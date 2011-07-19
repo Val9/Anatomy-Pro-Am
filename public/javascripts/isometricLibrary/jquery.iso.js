@@ -1,10 +1,10 @@
 var node_trap = new Array();
-function isoFix(isoObject, isoDataObject) {
+(function($) {
   $.fn.iso = function(options) {
     var defaults = $.extend({}, $.fn.iso.defaults, options);
     
-    return _.each(function() {
-      $this = isObject;
+    return this.each(function() {
+      $this = $(this);
       $this.grid = new Grid(defaults.max_x,defaults.max_y,defaults);
       
       if (defaults.unwalkables.length > 0) {
@@ -21,7 +21,7 @@ function isoFix(isoObject, isoDataObject) {
         $this.avatars.push(new Avatar($this.grid));
       };
       
-      _.each($this.avatars,function() {
+      $.each($this.avatars,function() {
         this.offset = defaults.avatar_offset;
       });
 
@@ -207,4 +207,4 @@ function isoFix(isoObject, isoDataObject) {
     render_all: true
   };
   
-};
+})(jQuery);

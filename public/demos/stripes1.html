@@ -1,0 +1,70 @@
+
+	<style type="text/css" media="screen">
+		#board {
+			position:relative;
+			overflow:visible;
+		}
+	
+		b {
+			/*
+			border: solid 1px #8EA1B0;
+			*/
+			background-color:pink;
+			width:20px;
+			height:20px;
+			/* padding:5px; */
+			position:absolute;
+			top:0;
+			left:0;
+			font: normal 9px Helvetica, sans-serif;
+			color:#7C8D9A;
+			display:block;
+		}
+	</style>
+	
+	<script type="text/javascript" charset="utf-8">
+	var colors = ["#ECD078", "#53777A", "D95B43", "#C02942", "#542437"];
+	var grid = new Grid(30,20);
+	var pixel_size = 10;
+	var zindexer = 0;
+	var randomized_nodes = grid.nodes;
+	var node = randomized_nodes.pop();
+	
+	function build_grid(x,y) {
+		if (zindexer >= (grid.width * grid.height)) {
+			return true;
+		}
+		
+		var id = '#tile_' + node.index();
+		
+		$('#board').append('<b id="tile_' + node.index() + '"></b>');
+		
+		var color = colors.shift();
+		colors.push(color);
+		
+		$(id).css({
+			backgroundColor: color
+		});
+		
+		$(id).animate({
+			width: pixel_size + 'px',
+			height: (pixel_size) + 'px',
+			left: (x * pixel_size) + 'px',
+			top: (y * (pixel_size)) + 'px'			
+		}, 25, function() {
+			if (randomized_nodes.length == 0) {
+				return true;
+			}
+
+			node = randomized_nodes.pop();
+			zindexer += 1;
+			build_grid(node.x,node.y);
+		});
+	}
+	
+	
+	build_grid(node.x,node.y);
+	$('#information').html("If you had a fancy ice cream parlor with floor to ceiling displays you could use this very rational approach towards making striped wallpaper. I'd buy your ice cream.");
+</script>
+
+	<div id="board"></div>
