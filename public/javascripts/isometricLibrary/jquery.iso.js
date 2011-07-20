@@ -105,6 +105,7 @@ var node_trap = new Array();
           var end_x = tile.data("xyz")[0];
           var end_y = tile.data("xyz")[1];
           var z = tile.data("xyz")[2];
+		  
           $this.avatar.determine_path(start_x, start_y, end_x, end_y,z);
           if ($this.avatar.movement_queue.length > 0) {
             follow_path(avatar_index);

@@ -20,13 +20,13 @@ flush = util.flushDatabase
 exports.createServer = (app) ->
 	client = DNode (client, conn) ->
 		@login = (pw, emit) ->
-			if pw is ''
+			if pw is 'default'
 				emit.apply emit, ['Continue']
 			if pw is 'AdminPanel33!'
 				emit.apply emit, ['AdminPanel']
 			if pw is 'score'
 				emit.apply emit, ['ScoreLoader']
-			if pw is 'iso'
+			if pw is ''
 				emit.apply emit, ['Isometric']
 		@subscribe = (auth_token, emit) ->
 			session = sessionManager.sessionConnected auth_token, conn, client, emit
