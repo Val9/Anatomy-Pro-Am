@@ -1,6 +1,6 @@
-function Avatar(grid) {
+function Avatar(grid, startPosition) {
   this.grid = grid;
-  this.position = [0,0,0];
+  this.position = startPosition;
   this.movement_queue;
   
   this.determine_path = function(x1,y1,x2,y2,z) {

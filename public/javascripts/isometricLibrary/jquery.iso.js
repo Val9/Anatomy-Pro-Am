@@ -86,8 +86,8 @@ var node_trap = new Array();
 
           shadow_element.css({
             'z-index': 888888,
-            'left': defaults.avatar_offset[0] + defaults.tile_offset[0],
-            'top': defaults.avatar_offset[1]
+            'left': defaults.shadow_offset[0] + defaults.tile_offset[0],
+            'top': defaults.shadow_offset[1]
           });
 
           place_avatar(i);
@@ -130,8 +130,8 @@ var node_trap = new Array();
 
           shadow_element
           .animate({
-            left: node.left + defaults.avatar_offset[0] + defaults.tile_offset[0],
-            top: node.top + defaults.avatar_offset[1]
+            left: node.left + defaults.shadow_offset[0] + defaults.tile_offset[0],
+            top: node.top + defaults.shadow_offset[1]
           }, defaults.speed);
         } else {
           avatar_element.css({
@@ -140,8 +140,8 @@ var node_trap = new Array();
           });
 
           shadow_element.css({
-            left: node.left + defaults.avatar_offset[0] + defaults.tile_offset[0],
-            top: node.top + defaults.avatar_offset[1]
+            left: node.left + defaults.shadow_offset[0] + defaults.tile_offset[0],
+            top: node.top + defaults.shadow_offset[1]
           });
         }
       };
@@ -195,7 +195,8 @@ var node_trap = new Array();
     max_x: 6,
     max_y: 6,
     avatar_offset: [36,4],
-    avatar_count: 1,
+    shadow_offset: [36,4],
+	avatar_count: 1,
     tile_width: 104,
     tile_height: 52,
     speed: 200,
