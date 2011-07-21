@@ -66,9 +66,6 @@ components.isometricView = function(){
 				    iso_tile_height:26
 				  });
 				
-				
-				
-				  	
 				  $('#grid').children().mouseenter(function(e) {
 				    $(e.target).addClass('hover');
 				  });
@@ -86,12 +83,20 @@ components.isometricView = function(){
 				if(position[0]== 0 && (position[1]>1&&position[1]<7))
 					console.log("use whiteboard");
 				else
-					console.log("You need to be closer to the whiteboard to use it");
+					console.log($('#message_info_text'));
+					$('#message_info_text').html("You need to be closer to the whiteboard to use it");
 			}else if(e.target.id == "computerDesk"){
-				if(position[1] == 2 && (position[0]>3 && position[0]<9))
-					console.log("use computer");
-				else
-					console.log("You need to be closer to the computer to use it");
+				if(position[1] == 2 && (position[0]>3 && position[0]<9)){
+					remote.newCase(2, me, emit);
+					new ComputerView(2);
+				}else{
+					$('#message_info_text').html("You need to be closer to the computer to use it");
+				}
+			}else if(e.target.id == "message_help"){
+					console.log("am here");
+					$('#message_info_text').html("Walk around your office, click your computer to start contouring,"
+					+" or click the whiteboard to draw for fun. "
+					+"If you need help click the help box to your right.");
 			}else{
 				console.log("There's nothing there!");
 			}

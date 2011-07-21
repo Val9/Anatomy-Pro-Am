@@ -1631,5 +1631,22 @@ s
 .des_cancer{color:#2d8b2f;}
 .des_healthy{color:#c72a2a;}
 
+
+.message_info_header{
+    font-size:25px;
+    background: -webkit-gradient(linear, left top, left bottom, from(#d20000), to(#630000));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-family:SteelfishRegular;
+    color:#d20000;
+}
+
+#message_info_text{
+    font-family:arial;
+    font-size:20px;
+    color:#333;
+    margin:10px;    
+}
+
 /* end score card */
 
