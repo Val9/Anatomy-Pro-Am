@@ -55,8 +55,8 @@
   height:26px;
   position:absolute;
   /*background:url('images/cube_tile_grass.png') no-repeat bottom left;*/
-  /*background:url('images/brown2.png') no-repeat bottom right;*/
-  background:url('images/cube_tile_dirt.png') no-repeat bottom left;
+  background:url('images/brown2.png') no-repeat bottom right;
+  /*background:url('images/cube_tile_dirt.png') no-repeat bottom left;*/
   visibility:hidden;
   
 }

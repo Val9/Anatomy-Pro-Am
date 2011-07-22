@@ -18,7 +18,7 @@ var node_trap = new Array();
 
       $this.avatars = new Array();
       for (var i=0; i < defaults.avatar_count; i++) {
-        $this.avatars.push(new Avatar($this.grid));
+        $this.avatars.push(new Avatar($this.grid, defaults.startPosition));
       };
       
       $.each($this.avatars,function() {
@@ -194,6 +194,7 @@ var node_trap = new Array();
   $.fn.iso.defaults = {
     max_x: 6,
     max_y: 6,
+	startPosition: [0,0,0],
     avatar_offset: [36,4],
     shadow_offset: [36,4],
 	avatar_count: 1,

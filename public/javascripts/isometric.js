@@ -96,8 +96,11 @@ components.isometricView = function(){
 						
 						
 						$('#grid').iso({
+							unwalkables: [
+								"3_0_0"],
 						    max_x: 10, 
 						    max_y: 13,
+							startPosition: [1,6,0],
 						    avatar_offset: [4,-110],
 							shadow_offset: [4,-8],
 							tile_width:48,
@@ -113,11 +116,9 @@ components.isometricView = function(){
 						    $(e.target).removeClass('hover');
 						  });
 						
-						jQuery.fn.iso.avatar.position = [1,6,0];
 					   	
 					    console.log(jQuery.fn.iso.grid);
-					    console.log(jQuery.fn.iso.nodes);
-
+						
 						
 						break;
 				}
