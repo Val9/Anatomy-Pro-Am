@@ -13,6 +13,13 @@ var node_trap = new Array();
         };
       };
 
+	if (defaults.elevateds.length > 0) {
+        for (var i=0; i < defaults.elevateds.length; i++) {
+          	console.log($this.grid);
+			$this.grid.nodes[defaults.elevateds[i]].z = 4;
+        };
+      };
+
       $this.nodes = $this.grid.nodes;
       node_trap.push($this.grid);
 
@@ -42,6 +49,10 @@ var node_trap = new Array();
           var parent_id = $this.attr('id');
           var id = parent_id + '_tile_' + key;
           var label = (defaults.labels) ? id : '';
+		
+		var tempZ = node.z;
+		if(defaults.elevateds[''+node.x+'_'+node.y+'_0']) node.z = defaults.elevateds[''+node.x+'_'+node.y+'_0'];
+			
 
           if (defaults.render_all == false) {
             if (node.walkable != true) {
@@ -50,7 +61,7 @@ var node_trap = new Array();
                 zIndex: node.zindex,
                 left: (node.left+defaults.tile_offset[0]) + 'px',
                 top: (node.top - (node.z * defaults.iso_tile_height)) + 'px'
-              }).data("xyz", [node.x,node.y,node.z]);
+              }).data("xyz", [node.x,node.y,tempZ]);
               $('#' + id).addClass('dirt');
             }
           } else {
@@ -60,13 +71,15 @@ var node_trap = new Array();
               zIndex: node.zindex,
               left: (node.left+defaults.tile_offset[0]) + 'px',
               top: (node.top - (node.z * defaults.iso_tile_height)) + 'px'
-            }).data("xyz", [node.x,node.y,node.z]);
+            }).data("xyz", [node.x,node.y,tempZ]);
 
             if (node.walkable != true) {
               $('#' + id).addClass('dirt');
             }
           }
+		node.z = tempZ;
         };
+
 
       };
       
@@ -207,6 +220,7 @@ var node_trap = new Array();
     layers: 1,
     iso_tile_height:  5,
     unwalkables: [],
+	elevateds: [],
     render_all: true
   };
   

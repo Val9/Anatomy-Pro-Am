@@ -9,6 +9,7 @@ function Node(x,y,z,grid,options) {
   this.iso_width = 0;
   this.walkable = true;
   this.id = this.x + "_" + this.y + "_" + this.z;
+  this.trueZ = options.elevateds[this.id];
   
   if (options) {
     if (options.tile_width && options.tile_height) {
@@ -59,6 +60,7 @@ function Node(x,y,z,grid,options) {
     return ((this.x + this.y) * this.height / 2) - (this.iso_height * this.z);
   }
   
+
   return {
     x: this.x,
     y: this.y,
@@ -66,6 +68,7 @@ function Node(x,y,z,grid,options) {
     width: this.width,
     height: this.height,
     z: this.z,
+	trueZ: this.trueZ,
     iso_height: this.iso_height,
     iso_width: this.iso_width,
     walkable: this.walkable,

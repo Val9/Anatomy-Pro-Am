@@ -25,9 +25,10 @@ components.isometricView = function(){
 			}.bind(this));
 		},
 		setupView: function() {
-			this.loadRoom(2);
+			this.loadRoom(1);
 		},
 		loadRoom: function(roomNum) {
+			this.roomNum = roomNum;
 			(function($){ 
 				switch(roomNum){
 					case 1:
@@ -93,11 +94,32 @@ components.isometricView = function(){
 					case 2:
 						$('#room_div').html('<img src="images/room3.png" id="background_Office" style="position:absolute; left:20px; top:120px;"/>');
 						$('#grid').css({top:"100px", left:"170px"});
+						$('#image_div').html("<img src='images/def_head.png'/>");
+						$('#message_info_text').html("This is to show that switching between areas is easy,"
+						+" feel free to move around here, the goal was to make the stairs work right, unfortunately they don't.");
+						
+						var unwalkables = new Array();
+						var elevateds = new Array();
+						
+						for(var x = 0; x < 10; x++)
+							for(var y = 0; y<13; y++){
+								if(((x<4&&y<4) || y<2) || ((x>5&&x<9) && y<7))
+									unwalkables.push(""+x+"_"+y+"_"+0);
+								if(x==9 && y<7){
+									if(y>2){
+										console.log(y);
+										elevateds[""+x+"_"+y+"_0"]=(7-y);
+									}else{ 
+										console.log("is fired");
+										elevateds[""+x+"_"+y+"_0"]=4;
+									}
+								}
+							}
 						
 						
 						$('#grid').iso({
-							unwalkables: [
-								"3_0_0"],
+							elevateds: elevateds,
+							unwalkables: unwalkables,
 						    max_x: 10, 
 						    max_y: 13,
 							startPosition: [1,6,0],
@@ -117,7 +139,7 @@ components.isometricView = function(){
 						  });
 						
 					   	
-					    console.log(jQuery.fn.iso.grid);
+					    console.log(jQuery.fn.iso.nodes);
 						
 						
 						break;
@@ -129,11 +151,13 @@ components.isometricView = function(){
 			console.log(e.target.id);
 			var position = jQuery.fn.iso.avatar.position;
 			if(e.target.id == "whiteboard"){
-				if(position[0]== 0 && (position[1]>1&&position[1]<7))
-					console.log("use whiteboard");
-				else
+				if(position[0]== 0 && (position[1]>1&&position[1]<7)){
+					$('#message_info_text').html("Dang, there are no markers here!");
+					$('#image_div').html("<img src='images/ed_head.png'/>");
+				}else{
 					$('#message_info_text').html("I'm pretty sure I need to be closer to the whiteboard to use it");
 					$('#image_div').html("<img src='images/ed_head.png'/>");
+				}
 			}else if(e.target.id == "computerDesk"){
 				if(position[1] == 2 && (position[0]>3 && position[0]<9)){
 					remote.newCase(2, me, emit);
@@ -142,7 +166,7 @@ components.isometricView = function(){
 					$('#message_info_text').html("I think I need to be closer to the computer to use it");
 					$('#image_div').html("<img src='images/ed_head.png'/>");
 				}
-			}else if(e.target.id == "message_help" || e.target.id == "no_selected"){
+			}else if((e.target.id == "message_help" || e.target.id == "no_selected")&&(this.roomNum ==1)){
 					$('#message_info_text').html("Walk around your office, click your computer to start contouring,"
 					+" or click the whiteboard to draw for fun. "
 					+"If you need help click the help box to your right.");
