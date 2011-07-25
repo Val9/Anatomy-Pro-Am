@@ -1,5 +1,6 @@
 function A(x,y,grid) {
   this.master_list = {};
+  this.xyToZ_list = {};
   this.cheapest_node = {};
   this.cheapest_node["f"] = Infinity;
   this.path = [];
@@ -14,6 +15,7 @@ function A(x,y,grid) {
     var node_name = x + "_" + y + "_" + z;
     
     this.master_list[node_name] = {"status": 0, "x": x, "y": y, "z": z, "parent": undefined, "f": 0, "g": 0, "h": 0, "walkable": node.walkable, "node": node};
+  	this.xyToZ_list[x+"_"+y]=z;
   }
   
   for (var key in this.grid.nodes) {
@@ -41,6 +43,8 @@ function A(x,y,grid) {
   }
 
   this.find_node = function(x,y,z) {
+	//console.log(this.master_list);
+	//console.log(x + "_" + y + "_" + z);
     return this.master_list[x + "_" + y + "_" + z];
   }
   
@@ -51,6 +55,7 @@ function A(x,y,grid) {
     
     var sorted = this.open_nodes().sort(by_score);
     this.cheapest_node = sorted[0];
+	//console.log(sorted);
     return this.cheapest_node;
   }
   
@@ -63,22 +68,25 @@ function A(x,y,grid) {
   }
   
   this.neighbors = function(current_node) {
-    var x = current_node["x"];
+    console.log(current_node);
+	var x = current_node["x"];
     var y = current_node["y"];
     var z = current_node["z"];
-    
+    var self = this;
+	console.log(self.xyToZ_list);
     // build a list of possible neighbors to check, start above, the clockwise around the current node
     var possible_neighbor_nodes = [
-      (x)   + "_" + (y-1) + "_" + z,
-      (x+1) + "_" + (y-1) + "_" + z,
-      (x+1) + "_" + (y)   + "_" + z,
-      (x+1) + "_" + (y+1) + "_" + z,
-      (x)   + "_" + (y+1) + "_" + z,
-      (x-1) + "_" + (y+1) + "_" + z,
-      (x-1) + "_" + (y)   + "_" + z,
-      (x-1) + "_" + (y-1) + "_" + z
+      (x)   + "_" + (y-1) + "_" + self.xyToZ_list[(x+0)+"_"+(y-1)],
+      (x+1) + "_" + (y-1) + "_" + self.xyToZ_list[(x+1)+"_"+(y-1)],
+      (x+1) + "_" + (y)   + "_" + self.xyToZ_list[(x+1)+"_"+(y+0)],
+      (x+1) + "_" + (y+1) + "_" + self.xyToZ_list[(x+1)+"_"+(y+1)],
+      (x)   + "_" + (y+1) + "_" + self.xyToZ_list[(x+0)+"_"+(y+1)],
+      (x-1) + "_" + (y+1) + "_" + self.xyToZ_list[(x-1)+"_"+(y+1)],
+      (x-1) + "_" + (y)   + "_" + self.xyToZ_list[(x-1)+"_"+(y+0)],
+      (x-1) + "_" + (y-1) + "_" + self.xyToZ_list[(x-1)+"_"+(y-1)]
     ];
     
+	console.log(possible_neighbor_nodes);
     for (var i=0; i < possible_neighbor_nodes.length; i++) {
       // get the node from master list
       // if it exists, do our scoring, parent associating, opening and closing
@@ -117,6 +125,7 @@ function A(x,y,grid) {
   
   this.open_nodes = function() {
     var nodes = [];
+	//console.log(this.master_list);
     for (var key in this.master_list) {
       if (this.master_list[key].status == 1) {
         nodes.push(this.master_list[key]);
@@ -127,6 +136,8 @@ function A(x,y,grid) {
   }
   
   this.find_path = function() {
+	console.log("Break here");
+	console.log(this.start_node);
     var current_node = this.start_node;
     var parent_node = undefined;
     var path_found = false;
@@ -136,6 +147,7 @@ function A(x,y,grid) {
       this.close_node(current_node);
 
       current_node = this.find_cheapest_node();
+	  console.log(current_node["z"]);
       this.path.push([current_node["x"], current_node["y"], current_node["z"]]);
 
       if (current_node == this.goal_node) {

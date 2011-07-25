@@ -3,11 +3,12 @@ function Avatar(grid, startPosition) {
   this.position = startPosition;
   this.movement_queue;
   
-  this.determine_path = function(x1,y1,x2,y2,z) {
+  this.determine_path = function(x1,y1,z1,x2,y2,z2) {
     // TODO: this needs to be layer aware at some point - currently assumes layer 0
     var a = new A(grid.width, grid.height, grid);
-    a.set_start_node(a.find_node(x1,y1,z));
-    a.set_goal_node(a.find_node(x2,y2,z));
+	console.log(a);
+    a.set_start_node(a.find_node(x1,y1,z1));
+    a.set_goal_node(a.find_node(x2,y2,z2));
     a.find_path();
     this.movement_queue = a.path;
   }
@@ -25,7 +26,7 @@ function Avatar(grid, startPosition) {
   }
   
   this.node = function() {
-    var index = this.position[0] + "_" + this.position[1] + "_" + this.position[2]
+    var index = this.position[0] + "_" + this.position[1] + "_" + this.position[2];
     return this.grid.nodes[index];
   }
   

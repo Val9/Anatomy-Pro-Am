@@ -6,9 +6,11 @@ var node_trap = new Array();
     return this.each(function() {
       $this = $(this);
       $this.grid = new Grid(defaults.max_x,defaults.max_y,defaults);
-      
+      console.log($this.grid);
+	  console.log($this.grid.nodes);
       if (defaults.unwalkables.length > 0) {
         for (var i=0; i < defaults.unwalkables.length; i++) {
+		  console.log(defaults.unwalkables[i]);
           $this.grid.nodes[defaults.unwalkables[i]].walkable = false;
         };
       };
@@ -45,13 +47,12 @@ var node_trap = new Array();
         var html = '';
 
         for (var key in nodes) {
+		  console.log(key);
           var node = nodes[key];
           var parent_id = $this.attr('id');
           var id = parent_id + '_tile_' + key;
           var label = (defaults.labels) ? id : '';
-		
-		var tempZ = node.z;
-		if(defaults.elevateds[''+node.x+'_'+node.y+'_0']) node.z = defaults.elevateds[''+node.x+'_'+node.y+'_0'];
+		if(defaults.elevateds[''+node.x+'_'+node.y]) node.z = defaults.elevateds[''+node.x+'_'+node.y];
 			
 
           if (defaults.render_all == false) {
@@ -60,8 +61,8 @@ var node_trap = new Array();
               $('#' + id).css({
                 zIndex: node.zindex,
                 left: (node.left+defaults.tile_offset[0]) + 'px',
-                top: (node.top - (node.z * defaults.iso_tile_height)) + 'px'
-              }).data("xyz", [node.x,node.y,tempZ]);
+                top: (node.top) + 'px'
+              }).data("xyz", [node.x,node.y,node.z]);
               $('#' + id).addClass('dirt');
             }
           } else {
@@ -70,14 +71,13 @@ var node_trap = new Array();
             $('#' + id).css({
               zIndex: node.zindex,
               left: (node.left+defaults.tile_offset[0]) + 'px',
-              top: (node.top - (node.z * defaults.iso_tile_height)) + 'px'
-            }).data("xyz", [node.x,node.y,tempZ]);
+              top: (node.top) + 'px'
+            }).data("xyz", [node.x,node.y,node.z]);
 
             if (node.walkable != true) {
               $('#' + id).addClass('dirt');
             }
           }
-		node.z = tempZ;
         };
 
 
@@ -117,9 +117,9 @@ var node_trap = new Array();
           var start_z = $this.avatar.position[2];
           var end_x = tile.data("xyz")[0];
           var end_y = tile.data("xyz")[1];
-          var z = tile.data("xyz")[2];
+          var end_z = tile.data("xyz")[2];
 		  
-          $this.avatar.determine_path(start_x, start_y, end_x, end_y,z);
+          $this.avatar.determine_path(start_x, start_y, start_z, end_x, end_y, end_z);
           if ($this.avatar.movement_queue.length > 0) {
             follow_path(avatar_index);
           };

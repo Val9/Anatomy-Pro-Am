@@ -25,7 +25,7 @@ components.isometricView = function(){
 			}.bind(this));
 		},
 		setupView: function() {
-			this.loadRoom(1);
+			this.loadRoom(2);
 		},
 		loadRoom: function(roomNum) {
 			this.roomNum = roomNum;
@@ -99,30 +99,37 @@ components.isometricView = function(){
 						+" feel free to move around here, the goal was to make the stairs work right, unfortunately they don't.");
 						
 						var unwalkables = new Array();
-						var elevateds = new Array();
+						var elevateds = {};
 						
 						for(var x = 0; x < 10; x++)
 							for(var y = 0; y<13; y++){
-								if(((x<4&&y<4) || y<2) || ((x>5&&x<9) && y<7))
-									unwalkables.push(""+x+"_"+y+"_"+0);
 								if(x==9 && y<7){
 									if(y>2){
 										console.log(y);
-										elevateds[""+x+"_"+y+"_0"]=(7-y);
+										elevateds[""+x+"_"+y]=(7-y);
 									}else{ 
 										console.log("is fired");
-										elevateds[""+x+"_"+y+"_0"]=4;
+										elevateds[""+x+"_"+y]=4;
 									}
 								}
+								if(((x<4&&y<4) || y<2) || ((x>5&&x<9) && y<7)){
+									if(elevateds[""+x+"_"+y])
+										unwalkables.push(""+x+"_"+y+"_"+elevateds[""+x+"_"+y]);
+									else
+										unwalkables.push(""+x+"_"+y+"_0");
+								}
 							}
-						
+						console.log("stop");
+						console.log(unwalkables);
+						console.log(elevateds);
+						console.log("end");
 						
 						$('#grid').iso({
 							elevateds: elevateds,
 							unwalkables: unwalkables,
 						    max_x: 10, 
 						    max_y: 13,
-							startPosition: [1,6,0],
+							startPosition: [9,4,3],
 						    avatar_offset: [4,-110],
 							shadow_offset: [4,-8],
 							tile_width:48,
@@ -152,7 +159,7 @@ components.isometricView = function(){
 			var position = jQuery.fn.iso.avatar.position;
 			if(e.target.id == "whiteboard"){
 				if(position[0]== 0 && (position[1]>1&&position[1]<7)){
-					$('#message_info_text').html("Dang, there are no markers here!");
+					$('#message_info_text').html("Dang, all the markers are dried up!");
 					$('#image_div').html("<img src='images/ed_head.png'/>");
 				}else{
 					$('#message_info_text').html("I'm pretty sure I need to be closer to the whiteboard to use it");
