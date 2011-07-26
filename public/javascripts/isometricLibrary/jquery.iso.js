@@ -25,9 +25,9 @@ var node_trap = new Array();
       $this.nodes = $this.grid.nodes;
       node_trap.push($this.grid);
 
-      $this.avatars = new Array();
+      $this.avatars = {};
       for (var i=0; i < defaults.avatar_count; i++) {
-        $this.avatars.push(new Avatar($this.grid, defaults.startPosition));
+        $this.avatars[i]=(new Avatar($this.grid, defaults.startPosition));
       };
       
       $.each($this.avatars,function() {
@@ -41,7 +41,8 @@ var node_trap = new Array();
       $.fn.iso.avatars = $this.avatars;
       $.fn.iso.grid = $this.grid;
       $.fn.iso.nodes = $this.nodes;
-      
+
+
       function render_tiles() {
         var nodes = $this.nodes;
         var html = '';
@@ -82,31 +83,52 @@ var node_trap = new Array();
 
 
       };
-      
+
+	
+	
+	
       function render_avatars() {
-        for (var i=0; i < $this.avatars.length; i++) {
-          $this.append('<span class="avatar" id="avatar_' + i + '" />');
-          $this.append('<span class="shadow" id="shadow_' + i + '" />');
-
-          var avatar_element = $('#avatar_' + i);
-          var shadow_element = $('#shadow_' + i);
-
-          avatar_element.css({
-            'z-index': 999999,
-            'left': defaults.avatar_offset[0] + defaults.tile_offset[0],
-            'top': defaults.avatar_offset[1]
-          });
-
-          shadow_element.css({
-            'z-index': 888888,
-            'left': defaults.shadow_offset[0] + defaults.tile_offset[0],
-            'top': defaults.shadow_offset[1]
-          });
-
-          place_avatar(i);
-        };
+		console.log($this.avatars);
+        for (i in $this.avatars) {
+          render_avatar(i);
+		  
+		};
       };
+
+		function render_avatar(i) {
+			$this.append('<span class="avatar" id="avatar_' + i + '" />');
+	          $this.append('<span class="shadow" id="shadow_' + i + '" />');
+
+	          var avatar_element = $('#avatar_' + i);
+	          var shadow_element = $('#shadow_' + i);
+
+	          avatar_element.css({
+	            'z-index': 999999,
+	            'left': defaults.avatar_offset[0] + defaults.tile_offset[0],
+	            'top': defaults.avatar_offset[1]
+	          });
+
+	          shadow_element.css({
+	            'z-index': 888888,
+	            'left': defaults.shadow_offset[0] + defaults.tile_offset[0],
+	            'top': defaults.shadow_offset[1]
+	          });
+
+	          place_avatar(i);
+		}
       
+	  	em.on('FriendCameOnline', function(n) {
+			//console.log(n);
+			$this.avatars[n.id] = (new Avatar($this.grid, [0,0,0]));
+			render_avatar(n.id);
+	
+			
+		});
+		em.on('FriendWentOffline', function(n) {
+			console.log(n.first_name);
+			$this.avatars[n.id] = null;
+		});
+
       function attach_handlers(avatar_index) {
         $this.children().click(function(e) {
           $this.children().removeClass('goal');
@@ -197,9 +219,12 @@ var node_trap = new Array();
       
       render_tiles($this);
       render_avatars($this);
-      for (var i=0; i < defaults.avatar_count; i++) {
-        attach_handlers(i);
-      };
+    
+	//attach local handlers
+	attach_handlers(0);
+	//attach friend event handler
+
+
       
     });
   };

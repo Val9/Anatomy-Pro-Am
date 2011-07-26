@@ -7,15 +7,18 @@ components.isometricView = function(){
 		},
 		initialize: function() {
 			_.bindAll(this, 'loadRoom');
-			this.loadRoom(1);
+			this.setupView(1);
 		},
 		render: function() {
 			
 		},
 		setupView: function() {
+			
 			this.loadRoom(1);
 		},
 		loadRoom: function(roomNum) {
+			/*Initializes the html and isometric grids
+			for a given room */
 			this.roomNum = roomNum;
 			switch(roomNum){
 				case 1:
@@ -135,6 +138,8 @@ components.isometricView = function(){
 			}
 		},
 		objectClicked: function(e) {
+			/*Handles the events triggered for clickable objects
+			in a given room*/
 			console.log(e.target.id);
 			var position = jQuery.fn.iso.avatar.position;
 			if(e.target.id == "whiteboard"){
