@@ -6,12 +6,8 @@ function Avatar(grid, startPosition) {
   this.determine_path = function(player_id, x1,y1,z1,x2,y2,z2) {
     // TODO: this needs to be layer aware at some point - currently assumes layer 0
     var a = new A(grid.width, grid.height, grid);
-	console.log("a time! ");
-	console.log(a);
     a.set_start_node(a.find_node(x1,y1,z1));
     a.set_goal_node(a.find_node(x2,y2,z2));
-    console.log(remote);
-	console.log(me.id + " and this " + [x2,y2,z2]);
 	if(player_id == me.id) remote.moveAvatar(this.grid.defaults.roomNumber, me.id, {x:x2,y:y2,z:z2});
 	a.find_path();
     this.movement_queue = a.path;

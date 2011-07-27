@@ -34,6 +34,10 @@ exports.createServer = (app) ->
 			sessionManager.publishToAll 'FriendCameOnline', session.fbUser
 		conn.on 'end', ->
 			session = sessionManager.sessionDisconnected conn
+			_.each(sessionManager.isometricPlayerList, (roomPlayerList) ->
+				if(roomPlayerList[session.fbUser.id])
+					delete roomPlayerList[session.fbUser.id]
+			)
 			sessionManager.publishToAll 'FriendLeftRoom', -1, session.fbUser.id
 			sessionManager.publishToAll 'FriendWentOffline', session.fbUser
 		@sendJoinRequest = (fn, id, player_id, player_name, player_avatar) ->
@@ -148,6 +152,11 @@ exports.createServer = (app) ->
 				sessionManager.isometricPlayerList[room][player_id] = location
 			sessionManager.publishToAll 'FriendEnteredRoom', room, player_id, location
 		@playerLeftIsometricRoom = (room, player_id) ->
+			console.log("plid/pllist")
+			console.log player_id
+			if(sessionManager.isometricPlayerList[room][player_id])
+				console.log("deleting thing")
+				delete sessionManager.isometricPlayerList[room][player_id]
 			sessionManager.publishToAll 'FriendLeftRoom', room, player_id
 		@everybodyInIsometricRoom = (room, callback) ->
 			console.log("hello")

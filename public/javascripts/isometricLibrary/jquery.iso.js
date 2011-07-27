@@ -139,7 +139,9 @@ var node_trap = new Array();
         var avatar_element = $('#avatar_' + avatar_index);
         var shadow_element = $('#shadow_' + avatar_index);
         var node = $this.avatars[avatar_index].node();
-
+		console.log("avatars now");
+		console.log($this.avatars);
+		console.log(avatar_index);
         if (defaults.animate == true) {
           avatar_element.animate({
             left: node.left + defaults.avatar_offset[0] + defaults.tile_offset[0],
@@ -211,6 +213,12 @@ var node_trap = new Array();
 	attach_handlers(me.id);
 	//Server event handlers
 	em.on('FriendEnteredRoom', function(room, player_id, position) {
+		console.log("Debug zone");
+		console.log($this.avatars);
+		console.log(room);
+		console.log(player_id);
+		console.log(position);
+		
 		if(room == me.roomNumber && player_id != me.id){
 			$this.avatars[player_id] = (new Avatar($this.grid, position));
 			render_avatar(player_id);
@@ -218,11 +226,22 @@ var node_trap = new Array();
 	});
 	
 	em.on('FriendLeftRoom', function(room, player_id) {
-		if((room == me.roomNumber && player_id != me.id) || (room == -1 && $this.avatars[player_id])){
+		console.log("test time");
+		console.log(player_id);
+		console.log(room);
+		console.log(me.roomNumber);
+		console.log(me.id);
+		console.log($this.avatars);
+		console.log(player_id);
+		console.log($this.avatars[player_id]);
+		console.log("end test");
+		if(($this.avatars[player_id])){
 			console.log(player_id + " left the room");
 			$("#avatar_"+player_id).remove();
 			$("#shadow_"+player_id).remove();
 			delete $this.avatars[player_id]; 
+			console.log("now it is");
+			console.log($this.avatars);
 		}
 	});
 	
@@ -244,6 +263,9 @@ var node_trap = new Array();
 	//Server startup friend checker
 	remote.everybodyInIsometricRoom(me.roomNumber, function(playersInRoom) {
 		_.each(playersInRoom, function(num, key){
+			console.log("investigating");
+			console.log(key);
+			console.log($this.avatars);
 			if(key != me.id){
 				console.log("Player " + key);
 				console.log(num);

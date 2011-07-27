@@ -118,7 +118,7 @@ components.isometricView = function(){
 								unwalkables: unwalkables,
 							    max_x: 10, 
 							    max_y: 13,
-								startPosition: [9,4,3],
+								startPosition: {x:9,y:4,z:3},
 							    avatar_offset: [4,-110],
 								shadow_offset: [4,-8],
 								tile_width:48,
@@ -173,6 +173,7 @@ components.isometricView = function(){
 			}else if(e.target.id == "yes_selected"){
 					$('#message_info_text').html("Leaving room");
 					$('#grid').html('');
+					remote.playerLeftIsometricRoom(me.roomNumber, me.id);
 					this.loadRoom(2);
 			}else{
 				console.log("There's nothing there!");
