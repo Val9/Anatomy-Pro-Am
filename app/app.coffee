@@ -34,6 +34,7 @@ exports.createServer = (app) ->
 			sessionManager.publishToAll 'FriendCameOnline', session.fbUser
 		conn.on 'end', ->
 			session = sessionManager.sessionDisconnected conn
+			sessionManager.publishToAll 'FriendLeftRoom', -1, session.fbUser.id
 			sessionManager.publishToAll 'FriendWentOffline', session.fbUser
 		@sendJoinRequest = (fn, id, player_id, player_name, player_avatar) ->
 			console.log (id + " " + player_id + " " + player_name + " " + player_avatar)
@@ -134,13 +135,24 @@ exports.createServer = (app) ->
 			scoreManager.getImageInfo(callback)
 		@setGoalPointsForCaseAndLayer = (case_ID, layer_ID, goalPoints) ->
 			scoreManager.setGoalPointsForCaseAndLayer case_ID, layer_ID, goalPoints
-		@moveAvatar = (player_id, playerNewLocation) ->
+		@moveAvatar = (room, player_id, playerNewLocation) ->
 			console.log(player_id)
-			sessionManager.publishToAll "PlayerChangedPosition", player_id, playerNewLocation
-		@playerJoinedIsometricRoom = (player_id, room, position) ->
-			@isometricPlayerList[room] = {player_id:player_id, position: position}
-		@everybodyInIsometricRoom = (room, callback)
-			callback @isometricPlayerList[room]
+			sessionManager.isometricPlayerList[room][player_id] = playerNewLocation
+			sessionManager.publishToAll "PlayerChangedPosition", room, player_id, playerNewLocation
+		@playerJoinedIsometricRoom = (room, player_id, location) ->
+			console.log(sessionManager.isometricPlayerList)
+			if(sessionManager.isometricPlayerList[room])
+				sessionManager.isometricPlayerList[room][player_id] = location
+			else
+				sessionManager.isometricPlayerList[room] = {}
+				sessionManager.isometricPlayerList[room][player_id] = location
+			sessionManager.publishToAll 'FriendEnteredRoom', room, player_id, location
+		@playerLeftIsometricRoom = (room, player_id) ->
+			sessionManager.publishToAll 'FriendLeftRoom', room, player_id
+		@everybodyInIsometricRoom = (room, callback) ->
+			console.log("hello")
+			console.log(sessionManager.isometricPlayerList)
+			callback sessionManager.isometricPlayerList[room]
 
 		# dnode/coffeescript fix:
 		@version = config.version

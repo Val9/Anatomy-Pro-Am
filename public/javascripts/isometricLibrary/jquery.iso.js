@@ -26,15 +26,14 @@ var node_trap = new Array();
       node_trap.push($this.grid);
 
       $this.avatars = {};
-      for (var i=0; i < defaults.avatar_count; i++) {
-        $this.avatars[i]=(new Avatar($this.grid, defaults.startPosition));
-      };
+      $this.avatars[me.id]=(new Avatar($this.grid, defaults.startPosition));
+      
       
       $.each($this.avatars,function() {
         this.offset = defaults.avatar_offset;
       });
 
-      $this.avatar = $this.avatars[0]; // is this needed?
+      $this.avatar = $this.avatars[me.id]; // is this needed?
       
       // exposing some things to public
       $.fn.iso.avatar = $this.avatar;
@@ -209,24 +208,30 @@ var node_trap = new Array();
       render_avatars($this);
     
 	//attach local handlers
-	attach_handlers(0);
+	attach_handlers(me.id);
 	//Server event handlers
-	em.on('FriendCameOnline', function(n) {
-		//console.log(n);
-		$this.avatars[n.id] = (new Avatar($this.grid, [0,0,0]));
-		render_avatar(n.id);
+	em.on('FriendEnteredRoom', function(room, player_id, position) {
+		if(room == me.roomNumber && player_id != me.id){
+			$this.avatars[player_id] = (new Avatar($this.grid, position));
+			render_avatar(player_id);
+		}
 	});
 	
-	em.on('FriendWentOffline', function(n) {
-		console.log(n.first_name);
-		$this.avatars[n.id] = null;
+	em.on('FriendLeftRoom', function(room, player_id) {
+		if((room == me.roomNumber && player_id != me.id) || (room == -1 && $this.avatars[player_id])){
+			console.log(player_id + " left the room");
+			$("#avatar_"+player_id).remove();
+			$("#shadow_"+player_id).remove();
+			delete $this.avatars[player_id]; 
+		}
 	});
 	
-	em.on('PlayerChangedPosition', function(player_id, newPosition) {
+	em.on('PlayerChangedPosition', function(room, player_id, newPosition) {
 		console.log(player_id);
 		console.log(newPosition);
-		if(me.id != player_id){
-			console.log($this.avatars[player_id]);
+		if(room == me.roomNumber && me.id != player_id){
+			console.log("avatars");
+			console.log($this.avatars);
 			var position = $this.avatars[player_id].position;
 			$this.avatars[player_id].determine_path(player_id, position[0], position[1], position[2],
 				newPosition.x, newPosition.y, newPosition.z);
@@ -234,15 +239,19 @@ var node_trap = new Array();
            		follow_path(player_id);
           	}
 		}
-		//$this.avatars[n.id] = (new Avatar($this.grid, [0,0,0]));
-		//render_avatar(n.id);
 	});
 	
 	//Server startup friend checker
-	remote.everybodyInIsometricRoom(room, function(playersInRoom) {
-			console.log(playersInRoom);
-		}
-	)
+	remote.everybodyInIsometricRoom(me.roomNumber, function(playersInRoom) {
+		_.each(playersInRoom, function(num, key){
+			if(key != me.id){
+				console.log("Player " + key);
+				console.log(num);
+				$this.avatars[key] = (new Avatar($this.grid, num));
+				render_avatar(key);
+			}
+		});
+	});
 	
 
       
@@ -250,9 +259,10 @@ var node_trap = new Array();
   };
   
   $.fn.iso.defaults = {
-    max_x: 6,
+    roomNumber: 0,
+	max_x: 6,
     max_y: 6,
-	startPosition: [0,0,0],
+	startPosition: {x:0,y:0,z:0},
     avatar_offset: [36,4],
     shadow_offset: [36,4],
 	avatar_count: 1,

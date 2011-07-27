@@ -15,14 +15,13 @@ components.isometricView = function(){
 		setupView: function() {
 			this.loadRoom(1);
 		},
-		loadRoom: function(roomNum) {
+		loadRoom: function(roomNumber) {
 			/*Initializes the html and isometric grids
 			for a given room */
-			this.roomNum = roomNum;
-			switch(roomNum){
+			me.roomNumber = roomNumber;
+			switch(roomNumber){
 				case 1:
-					remote.playerJoinedIsometricRoom(me.id, 1, [0,0,0]);
-					
+					remote.playerJoinedIsometricRoom(me.roomNumber, me.id, {x:0,y:0,z:0});
 					$.get('/renders/rooms/doctorsOffice.html', function(t){
 						this.el.html('');
 						this.el.html(t);
@@ -69,7 +68,8 @@ components.isometricView = function(){
 								shadow_offset: [4,-8],
 								tile_width:48,
 							    tile_height:26,
-							    iso_tile_height:26
+							    iso_tile_height:26,
+								roomNumber: 1
 							  });
 				
 							  $('#grid').children().mouseenter(function(e) {
@@ -83,8 +83,7 @@ components.isometricView = function(){
 						}.bind(this));
 						break;
 				case 2:
-					remote.playerJoinedIsometricRoom(me.id, 2, [9,4,3]);
-				
+					remote.playerJoinedIsometricRoom(me.roomNumber, me.id, {x:9,y:4,z:3});
 					$.get('/renders/rooms/room2.html', function(t){
 						this.el.html('');
 						this.el.html(t);
@@ -124,7 +123,8 @@ components.isometricView = function(){
 								shadow_offset: [4,-8],
 								tile_width:48,
 							    tile_height:26,
-							    iso_tile_height:26
+							    iso_tile_height:26,
+								roomNumber: 2
 							  });
 							
 							  $('#grid').children().mouseenter(function(e) {
@@ -160,7 +160,7 @@ components.isometricView = function(){
 					$('#message_info_text').html("I think I need to be closer to the computer to use it");
 					$('#image_div').html("<img src='images/ed_head.png'/>");
 				}
-			}else if((e.target.id == "message_help" || e.target.id == "no_selected")&&(this.roomNum ==1)){
+			}else if((e.target.id == "message_help" || e.target.id == "no_selected")&&(me.roomNumber ==1)){
 					$('#message_info_text').html("Walk around your office, click your computer to start contouring,"
 					+" or click the whiteboard to draw for fun. "
 					+"If you need help click the help box to your right.");

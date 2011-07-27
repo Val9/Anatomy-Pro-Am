@@ -1,6 +1,7 @@
 function Grid(width,height,options) {
   var floor = Math.floor
   var random = Math.random;
+  this.defaults = options;
   this.grid = new Array();
   this.width = width;
   this.height = height;

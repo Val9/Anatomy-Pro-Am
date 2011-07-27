@@ -34,6 +34,8 @@ class SessionManager
 		@sessions_for_facebook_id = {}
 		@sessions_for_random_key = {}
 		@currentActivity = 0
+		@isometricPlayerList = {}
+		
 		
 	#call this when the user has done the facebook authentication
 	#this returns a random session key that should be used to authenticate the dnode connection
