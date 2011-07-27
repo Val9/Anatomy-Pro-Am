@@ -137,8 +137,10 @@ exports.createServer = (app) ->
 		@moveAvatar = (player_id, playerNewLocation) ->
 			console.log(player_id)
 			sessionManager.publishToAll "PlayerChangedPosition", player_id, playerNewLocation
-		@joinedIsometric = (player_id, room, position) ->
-			@isometricPlayerList[player_id] = {room: room, position: position}
+		@playerJoinedIsometricRoom = (player_id, room, position) ->
+			@isometricPlayerList[room] = {player_id:player_id, position: position}
+		@everybodyInIsometricRoom = (room, callback)
+			callback @isometricPlayerList[room]
 
 		# dnode/coffeescript fix:
 		@version = config.version

@@ -239,7 +239,10 @@ var node_trap = new Array();
 	});
 	
 	//Server startup friend checker
-	remote.everybodyOnIsometric(callback);
+	remote.everybodyInIsometricRoom(room, function(playersInRoom) {
+			console.log(playersInRoom);
+		}
+	)
 	
 
       
