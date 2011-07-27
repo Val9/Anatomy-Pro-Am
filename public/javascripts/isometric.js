@@ -7,13 +7,12 @@ components.isometricView = function(){
 		},
 		initialize: function() {
 			_.bindAll(this, 'loadRoom');
-			this.setupView(1);
+			this.setupView();
 		},
 		render: function() {
 			
 		},
 		setupView: function() {
-			
 			this.loadRoom(1);
 		},
 		loadRoom: function(roomNum) {
@@ -22,6 +21,8 @@ components.isometricView = function(){
 			this.roomNum = roomNum;
 			switch(roomNum){
 				case 1:
+					remote.playerJoinedIsometricRoom(me.id, 1, [0,0,0]);
+					
 					$.get('/renders/rooms/doctorsOffice.html', function(t){
 						this.el.html('');
 						this.el.html(t);
@@ -82,13 +83,14 @@ components.isometricView = function(){
 						}.bind(this));
 						break;
 				case 2:
+					remote.playerJoinedIsometricRoom(me.id, 2, [9,4,3]);
+				
 					$.get('/renders/rooms/room2.html', function(t){
 						this.el.html('');
 						this.el.html(t);
 						(function($){
 							var unwalkables = new Array();
 							var elevateds = {};
-						
 							for(var x = 0; x < 10; x++)
 								for(var y = 0; y<13; y++){
 									if(x==9 && y<7){

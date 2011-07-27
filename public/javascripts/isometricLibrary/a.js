@@ -68,8 +68,7 @@ function A(x,y,grid) {
   }
   
   this.neighbors = function(current_node) {
-    console.log(current_node);
-	var x = current_node["x"];
+    var x = current_node["x"];
     var y = current_node["y"];
     var z = current_node["z"];
     var self = this;

@@ -134,6 +134,11 @@ exports.createServer = (app) ->
 			scoreManager.getImageInfo(callback)
 		@setGoalPointsForCaseAndLayer = (case_ID, layer_ID, goalPoints) ->
 			scoreManager.setGoalPointsForCaseAndLayer case_ID, layer_ID, goalPoints
+		@moveAvatar = (player_id, playerNewLocation) ->
+			console.log(player_id)
+			sessionManager.publishToAll "PlayerChangedPosition", player_id, playerNewLocation
+		@joinedIsometric = (player_id, room, position) ->
+			@isometricPlayerList[player_id] = {room: room, position: position}
 
 		# dnode/coffeescript fix:
 		@version = config.version

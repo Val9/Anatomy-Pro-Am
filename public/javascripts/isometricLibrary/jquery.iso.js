@@ -117,18 +117,6 @@ var node_trap = new Array();
 	          place_avatar(i);
 		}
       
-	  	em.on('FriendCameOnline', function(n) {
-			//console.log(n);
-			$this.avatars[n.id] = (new Avatar($this.grid, [0,0,0]));
-			render_avatar(n.id);
-	
-			
-		});
-		em.on('FriendWentOffline', function(n) {
-			console.log(n.first_name);
-			$this.avatars[n.id] = null;
-		});
-
       function attach_handlers(avatar_index) {
         $this.children().click(function(e) {
           $this.children().removeClass('goal');
@@ -141,7 +129,7 @@ var node_trap = new Array();
           var end_y = tile.data("xyz")[1];
           var end_z = tile.data("xyz")[2];
 		  
-          $this.avatar.determine_path(start_x, start_y, start_z, end_x, end_y, end_z);
+          $this.avatar.determine_path(me.id, start_x, start_y, start_z, end_x, end_y, end_z);
           if ($this.avatar.movement_queue.length > 0) {
             follow_path(avatar_index);
           };
@@ -222,8 +210,37 @@ var node_trap = new Array();
     
 	//attach local handlers
 	attach_handlers(0);
-	//attach friend event handler
-
+	//Server event handlers
+	em.on('FriendCameOnline', function(n) {
+		//console.log(n);
+		$this.avatars[n.id] = (new Avatar($this.grid, [0,0,0]));
+		render_avatar(n.id);
+	});
+	
+	em.on('FriendWentOffline', function(n) {
+		console.log(n.first_name);
+		$this.avatars[n.id] = null;
+	});
+	
+	em.on('PlayerChangedPosition', function(player_id, newPosition) {
+		console.log(player_id);
+		console.log(newPosition);
+		if(me.id != player_id){
+			console.log($this.avatars[player_id]);
+			var position = $this.avatars[player_id].position;
+			$this.avatars[player_id].determine_path(player_id, position[0], position[1], position[2],
+				newPosition.x, newPosition.y, newPosition.z);
+			if ($this.avatars[player_id].movement_queue.length > 0) {
+           		follow_path(player_id);
+          	}
+		}
+		//$this.avatars[n.id] = (new Avatar($this.grid, [0,0,0]));
+		//render_avatar(n.id);
+	});
+	
+	//Server startup friend checker
+	remote.everybodyOnIsometric(callback);
+	
 
       
     });
