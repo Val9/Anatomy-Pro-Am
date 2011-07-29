@@ -31,6 +31,7 @@ exports.createServer = (app) ->
 		@subscribe = (auth_token, emit) ->
 			session = sessionManager.sessionConnected auth_token, conn, client, emit
 			emit.apply emit, ['myINFO', session.fbUser, session.player_color]
+			console.log session.sessions_for_connection
 			sessionManager.publishToAll 'FriendCameOnline', session.fbUser
 		conn.on 'end', ->
 			session = sessionManager.sessionDisconnected conn
@@ -144,7 +145,6 @@ exports.createServer = (app) ->
 			sessionManager.isometricPlayerList[room][player_id] = playerNewLocation
 			sessionManager.publishToAll "PlayerChangedPosition", room, player_id, playerNewLocation
 		@playerJoinedIsometricRoom = (room, player_id, location) ->
-			console.log(sessionManager.isometricPlayerList)
 			if(sessionManager.isometricPlayerList[room])
 				sessionManager.isometricPlayerList[room][player_id] = location
 			else

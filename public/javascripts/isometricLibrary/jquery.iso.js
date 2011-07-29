@@ -47,8 +47,7 @@ var node_trap = new Array();
         var html = '';
 
         for (var key in nodes) {
-		  console.log(key);
-          var node = nodes[key];
+		  var node = nodes[key];
           var parent_id = $this.attr('id');
           var id = parent_id + '_tile_' + key;
           var label = (defaults.labels) ? id : '';
@@ -214,12 +213,17 @@ var node_trap = new Array();
 	//Server event handlers
 	em.on('FriendEnteredRoom', function(room, player_id, position) {
 		console.log("Debug zone");
+		console.log(me.roomNumber)
+		console.log("and");
+		console.log(me.id);
 		console.log($this.avatars);
 		console.log(room);
 		console.log(player_id);
 		console.log(position);
-		
-		if(room == me.roomNumber && player_id != me.id){
+		//The next part shouldn't need the !$this.avatars[player_id] boolean
+		//I'm thinking the util code might have a redundancy on its event emitting
+		//Adding that boolean works around the problem though
+		if(room == me.roomNumber && player_id != me.id && !$this.avatars[player_id]){
 			$this.avatars[player_id] = (new Avatar($this.grid, position));
 			render_avatar(player_id);
 		}
@@ -265,8 +269,9 @@ var node_trap = new Array();
 		_.each(playersInRoom, function(num, key){
 			console.log("investigating");
 			console.log(key);
+			console.log(me.id);
 			console.log($this.avatars);
-			if(key != me.id){
+			if(key != me.id && !$this.avatars[key]){
 				console.log("Player " + key);
 				console.log(num);
 				$this.avatars[key] = (new Avatar($this.grid, num));

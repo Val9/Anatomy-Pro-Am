@@ -18,6 +18,7 @@ components.isometricView = function(){
 		loadRoom: function(roomNumber) {
 			/*Initializes the html and isometric grids
 			for a given room */
+			console.log("this should fire once");
 			me.roomNumber = roomNumber;
 			switch(roomNumber){
 				case 1:
@@ -83,6 +84,7 @@ components.isometricView = function(){
 						}.bind(this));
 						break;
 				case 2:
+					console.log("before 1?")
 					remote.playerJoinedIsometricRoom(me.roomNumber, me.id, {x:9,y:4,z:3});
 					$.get('/renders/rooms/room2.html', function(t){
 						this.el.html('');
