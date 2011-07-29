@@ -101,7 +101,7 @@ var node_trap = new Array();
 	          var shadow_element = $('#shadow_' + i);
 
 	          avatar_element.css({
-	            'z-index': 999999,
+	            'z-index': 900000,
 	            'left': defaults.avatar_offset[0] + defaults.tile_offset[0],
 	            'top': defaults.avatar_offset[1]
 	          });

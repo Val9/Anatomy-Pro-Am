@@ -7,25 +7,40 @@ components.isometricView = function(){
 		},
 		initialize: function() {
 			_.bindAll(this, 'loadRoom');
-			this.setupView();
+			this.render();
 		},
 		render: function() {
-			
+			$.get('/renders/isometric.html', function(t){
+				this.el.html('');
+				this.el.html(t);
+				this.isometricMain = $('#isometric_main');
+				this.transitionCanvas = $('#transitionCanvas')[0];
+				this.transitionContext = this.transitionCanvas.getContext("2d");
+				this.transitionVideo = $('#transitionVideo')[0];
+				this.setupView();
+			}.bind(this));
 		},
 		setupView: function() {
 			this.loadRoom(1);
 		},
+		drawTransition: function() {
+			this.transitionContext.drawImage(this.transitionVideo, 0,0,this.transitionCanvas.width,this.transitionCanvas.height);
+				var self = this;
+				_.delay(function(){
+					self.drawTransition();
+				}, 50);
+		
+		},
 		loadRoom: function(roomNumber) {
 			/*Initializes the html and isometric grids
 			for a given room */
-			console.log("this should fire once");
 			me.roomNumber = roomNumber;
 			switch(roomNumber){
 				case 1:
 					remote.playerJoinedIsometricRoom(me.roomNumber, me.id, {x:0,y:0,z:0});
 					$.get('/renders/rooms/doctorsOffice.html', function(t){
-						this.el.html('');
-						this.el.html(t);
+						this.isometricMain.html('');
+						this.isometricMain.html(t);
 						(function($){ 
 							$('#grid').iso({
 							    unwalkables: [
@@ -84,11 +99,11 @@ components.isometricView = function(){
 						}.bind(this));
 						break;
 				case 2:
-					console.log("before 1?")
+					console.log("before 1?");
 					remote.playerJoinedIsometricRoom(me.roomNumber, me.id, {x:9,y:4,z:3});
 					$.get('/renders/rooms/room2.html', function(t){
-						this.el.html('');
-						this.el.html(t);
+						this.isometricMain.html('');
+						this.isometricMain.html(t);
 						(function($){
 							var unwalkables = new Array();
 							var elevateds = {};
@@ -175,8 +190,11 @@ components.isometricView = function(){
 			}else if(e.target.id == "yes_selected"){
 					$('#message_info_text').html("Leaving room");
 					$('#grid').html('');
-					remote.playerLeftIsometricRoom(me.roomNumber, me.id);
+					$('#transitionCanvas').css('visibility','visible');
+					//this.transitionVideo.play();
+					this.drawTransition();
 					this.loadRoom(2);
+					remote.playerLeftIsometricRoom(me.roomNumber, me.id);
 			}else{
 				console.log("There's nothing there!");
 			}
