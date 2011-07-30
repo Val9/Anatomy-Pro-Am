@@ -24,11 +24,25 @@ components.isometricView = function(){
 			this.loadRoom(1);
 		},
 		drawTransition: function() {
-			this.transitionContext.drawImage(this.transitionVideo, 0,0,this.transitionCanvas.width,this.transitionCanvas.height);
+			//console.log(this.transitionVideo);
+			if(this.transitionVideo.ended){
+				$('#transitionCanvas').css('visibility','hidden');
+				return;
+			}else{
+				this.transitionContext.drawImage(this.transitionVideo, 0,0,this.transitionCanvas.width,this.transitionCanvas.height);
+				var imageData = this.transitionContext.getImageData(0, 0, this.transitionCanvas.width, this.transitionCanvas.height);
+				var pix = imageData.data;
+				var k = 0;
+				for(var k = 0; k < pix.length; k+=4){
+					if(pix[k]>240 && pix[k+1]<20 && pix[k+2]<20)
+						pix[k+3]=0;
+				}
 				var self = this;
+				this.transitionContext.putImageData(imageData,0,0);
 				_.delay(function(){
 					self.drawTransition();
-				}, 50);
+				}, 20);
+			}
 		
 		},
 		loadRoom: function(roomNumber) {
@@ -191,7 +205,7 @@ components.isometricView = function(){
 					$('#message_info_text').html("Leaving room");
 					$('#grid').html('');
 					$('#transitionCanvas').css('visibility','visible');
-					//this.transitionVideo.play();
+					this.transitionVideo.play();
 					this.drawTransition();
 					this.loadRoom(2);
 					remote.playerLeftIsometricRoom(me.roomNumber, me.id);
